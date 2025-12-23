@@ -27,7 +27,7 @@ They are developed **in parallel** by the team and integrated through clear API/
 │   │       ├── coupon.py
 │   │       ├── review.py
 │   │       ├── interaction.py
-│   │       └── recommendation.py          # 🤖 Backend endpoints that call AI service
+│   │       └── recommendation.py          #🤖 Backend endpoints that call AI service
 │   ├── core/
 │   │   ├── config.py
 │   │   ├── security.py
@@ -99,7 +99,7 @@ They are developed **in parallel** by the team and integrated through clear API/
 ├── .gitignore
 ├── LICENSE
 └── README.md
-
+```
 
 ## 🧠 What Each Part Does
 
@@ -144,7 +144,7 @@ They are developed **in parallel** by the team and integrated through clear API/
 
 ## 🔧 Run Backend (API)
 
-```bash
+
 pip install -r requirements.txt
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
