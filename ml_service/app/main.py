@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
+from recommender import get_recommendations
 
 app = FastAPI()
 
@@ -16,5 +17,5 @@ def predict(request : PredictionRequest):
     user_id = request.user_id
     recent_products = request.recent_products
 
-    recommended_products = get_recomendations(user_id,recent_products)
+    recommended_products = get_recommendations(user_id,recent_products)
     return PredictionResponse(recommended_products=recommended_products)
