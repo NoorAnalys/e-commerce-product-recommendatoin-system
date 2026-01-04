@@ -1,21 +1,18 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from typing import List
-from recommender import get_recommendations
+from .schemas import PredictionRequest, PredictionResponse
+from .utils import load_model, get_product_recommendations
+import os
+import numpy as np
+
+
+model = load_model('app/model/model.joblib')
+product_features = np.load('app/model/product_features.npy')  # Ensure you have this file ready
 
 app = FastAPI()
 
-class PredictionRequest(BaseModel):
-    user_id : int
-    recent_products : List[int]
-
-class PredictionResponse(BaseModel):
-    recommended_products : List[int]
-
-@app.post("/predict",response_model=PredictionResponse)
-def predict(request : PredictionRequest):
-    user_id = request.user_id
-    recent_products = request.recent_products
-
-    recommended_products = get_recommendations(user_id,recent_products)
+@app.post("/predict", response_model=PredictionResponse)
+def predict(request: PredictionRequest):
+    recommended_products = get_product_recommendations(
+        request.user_id, request.recent_products, model, product_features
+    )
     return PredictionResponse(recommended_products=recommended_products)
