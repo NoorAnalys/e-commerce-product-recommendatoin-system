@@ -1,0 +1,75 @@
+version: '3.8'
+
+services:
+  # -----------------------------
+  # 1. MySQL Database
+  # -----------------------------
+  db:
+    image: mysql:8.0
+    container_name: ecommerce_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ecommerce_db
+      MYSQL_USER: user
+      MYSQL_PASSWORD: userpassword
+      MYSQL_ROOT_PASSWORD: rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - ecommerce_network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # -----------------------------
+  # 2. ML Microservice
+  # -----------------------------
+  ml_service:
+    build:
+      context: ./ml_service
+      dockerfile: Dockerfile
+    container_name: ml_service
+    ports:
+      - "8001:8000" # Host 8001 -> Container 8000
+    volumes:
+      # Mount the ML notebooks/data so you can access models trained there
+      - ./data:/code/data
+      - ./ml_notebooks:/code/ml_notebooks
+    networks:
+      - ecommerce_network
+
+  # -----------------------------
+  # 3. Backend API (Main App)
+  # -----------------------------
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ecommerce_backend
+    depends_on:
+      db:
+        condition: service_healthy
+      ml_service:
+        condition: service_started
+    ports:
+      - "8000:8000"
+    environment:
+      # Database Connection String
+      DATABASE_URL: mysql+mysqlconnector://user:userpassword@db/ecommerce_db
+      # URL to talk to the ML Service (service_name:port)
+      ML_SERVICE_URL: http://ml_service:8000
+    volumes:
+      # Sync code for live reloading during development
+      - ./app:/code/app
+    networks:
+      - ecommerce_network
+
+volumes:
+  db_data:
+
+networks:
+  ecommerce_network:
+    driver: bridge
