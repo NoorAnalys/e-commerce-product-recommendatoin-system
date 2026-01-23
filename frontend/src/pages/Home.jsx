@@ -4,9 +4,9 @@ import RecommendationSection from "../components/RecommendationSection"
 
 export default function Home() {
   return (
-    <div style={{ padding: 20 }}>
+    <div className="page">
       <h1>Home</h1>
-      <div style={{ display: "flex", gap: 12 }}>
+      <div className="product-grid">
         {products.map(p => (
           <ProductCard key={p.id} product={p} />
         ))}
