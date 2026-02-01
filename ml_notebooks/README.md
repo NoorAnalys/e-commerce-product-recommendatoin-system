@@ -25,8 +25,10 @@ ml_notebooks/
 
 ## 📦 Artifacts
 
-collaborative.joblib
+collaborative.joblib 
+
 content.joblib
+
 hybrid_config.json
 
 ---
