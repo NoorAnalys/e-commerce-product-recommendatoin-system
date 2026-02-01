@@ -35,16 +35,4 @@ hybrid_config.json
 
 ## 🔁 Pipeline
 
-   Data
-   
-    ↓
-    
-Notebooks
-    
-    ↓
-    
-  Models
-  
-    ↓
-    
-ML Service
+   Data ➡️ Notebooks ➡️ Models ➡️ ML Service
